@@ -41,10 +41,10 @@ void display(List* ls){
         return;
     }
     while (tmp != nullptr){
-        cout << "Welcome " << tmp -> data.username << "\n";
+        cout << "Welcome " << tmp -> data.username << "!" << "\n";
         cout << "Your ID is: " << tmp -> data.accID << "\n";
-        cout << "Your name is: " << tmp -> data.accName << "\n";
-        cout << "Your current balance: " << tmp -> data.balance << "\n";
+        cout << "Your account name is: " << tmp -> data.accName << "\n";
+        cout << "Your current balance is: " << tmp -> data.balance << "\n";
 
         tmp = tmp -> next; 
     }

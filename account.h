@@ -1,6 +1,3 @@
-#ifndef ACCOUNT_H
-#define ACCOUNT_H
-
 #include <iostream>
 #include <string>
 using namespace std;
@@ -28,5 +25,3 @@ List* createList();
 
 void addAcc(List* ls, int id, string name, string username, string password, double bal);
 void display(List* ls);
-
-#endif

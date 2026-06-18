@@ -35,9 +35,10 @@ int main(){
 
             cout << "Enter Account ID: ";
             cin >> id;
+            cin.ignore(); 
 
             cout << "Enter Full Name: ";
-            cin >> name;
+            getline(cin, name);
 
             cout << "Enter Username: ";
             cin >> username;
