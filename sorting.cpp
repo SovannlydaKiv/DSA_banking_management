@@ -67,7 +67,7 @@ void Merge(Account a[], int lb, int mid, int ub)
 
     while (i <= mid && j <= ub)
     {
-        if (a[i].accountID < a[j].id)
+        if (a[i].accID < a[j].accID)
         {
             b[k++] = a[i++];
         } else
@@ -105,15 +105,22 @@ void MergeSortByID(Account arr[], int lb, int ub)
     }
 }
 
-void sortByName(Account arr[], int n) {
-    for (int i = 0; i < n - 1; i++) {
-        int minIdx = i;
-        for (int j = i + 1; j < n; j++) {
-            if (strcmp(arr[j].name, arr[minIdx].name) < 0)
+void sortByName(Account arr[], int n)
+{
+    for (int i = 0; i < n - 1; i++)
+    {
+        int minIdx = 1;
+        for (int j = i + 1; j < n; j++)
+        {
+            if (strcmp(arr[j].accName.c_str(), arr[minIdx].accName.c_str()) < 0)
+            {
                 minIdx = j;
+            }
         }
-        if (minIdx != i) {
-            swap(&arr[i], &arr[minIdx]);
+
+        if (minIdx != i)
+        {
+            swap(arr[i].accName, arr[minIdx].accName);
         }
     }
 }
