@@ -1,12 +1,18 @@
-#pragma once;
-#include "Account.h"
+#pragma once
+#include "account.h"
 
-void sortingMenu();
+// Merge Sort by Balance
+void MergeBalance(Account arr[], int lb, int mid, int ub);
+void MergeSortBalance(Account arr[], int lb, int ub);
 
-void BubbleSortByBalance(Account arr[], int n, bool asecending);
-void MergeSortByID(Account arr[], int lb, int ub);
-void sortByName(Account arr[], int n);
+// Merge Sort by ID
+void MergeID(Account arr[], int lb, int mid, int ub);
+void MergeSortID(Account arr[], int lb, int ub);
 
+// Merge Sort by Name
+void MergeName(Account arr[], int lb, int mid, int ub);
+void MergeSortName(Account arr[], int lb, int ub);
+
+// Printing function
 void printAccounts(Account arr[], int n);
-
-void Merge(Account arr[], int lb, int mid, int ub);
+void sortingMenu();
