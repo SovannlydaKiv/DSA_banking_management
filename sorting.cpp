@@ -1,16 +1,9 @@
 #include "Sorting.h"
 #include <stdio.h>
-#include <string.h>
 #include <time.h>
 #include <iostream>
+#include <algorithm>
 using namespace std;
-
-void swap(int* a, int* b)
-{
-    int temp = *a;
-    *a = *b;
-    *b = temp;
-}
 
 void bubbleSortAscending(Account arr[], int n)
 {
@@ -21,7 +14,7 @@ void bubbleSortAscending(Account arr[], int n)
         {
             if (arr[j].balance > arr[j + 1].balance)
             {
-                swap (arr[j].balance, arr[j+1].balance);
+                std::swap(arr[j], arr[j+1]);
                 flag = true;
             }
         }
@@ -38,7 +31,7 @@ void bubbleSortDescending(Account arr[], int n)
         {
             if (arr[j].balance < arr[j+1].balance)
             {
-                swap (arr[j].balance, arr[j+1].balance);
+                std::swap(arr[j], arr[j+1]);
                 flag = true;
             }
         }
@@ -109,10 +102,10 @@ void sortByName(Account arr[], int n)
 {
     for (int i = 0; i < n - 1; i++)
     {
-        int minIdx = 1;
+        int minIdx = i;
         for (int j = i + 1; j < n; j++)
         {
-            if (strcmp(arr[j].accName.c_str(), arr[minIdx].accName.c_str()) < 0)
+            if (arr[j].accName < arr[minIdx].accName)
             {
                 minIdx = j;
             }
@@ -120,7 +113,23 @@ void sortByName(Account arr[], int n)
 
         if (minIdx != i)
         {
-            swap(arr[i].accName, arr[minIdx].accName);
+            std::swap(arr[i], arr[minIdx]);
         }
     }
+}
+
+void printAccounts(Account arr[], int n)
+{
+    printf("\n  %-6s | %-20s | %-12s\n",
+           "ID", "Name", "Balance");
+    printf("  %-6s-+-%-20s-+-%-12s\n",
+           "------", "--------------------", "------------");
+    for (int i = 0; i < n; i++) {
+        printf("  %-6d | %-20s | %12.2f\n",
+               arr[i].accID, arr[i].accName.c_str(),
+               arr[i].balance);
+    }
+}
+
+void sortingMenu() {
 }
