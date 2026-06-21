@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <string.h>
 
+extern Account globalAccount[];
+extern int     globalCount;
+
 // Merge Sort by Balance
 void MergeBalance(Account arr[], int lb, int mid, int ub)
 {
@@ -103,7 +106,7 @@ void MergeName(Account arr[], int lb, int mid, int ub)
 
     while (i <= mid && j <= ub)
     {
-        if (arr[i].accName < arr[i].accName)
+        if (arr[i].accName < arr[j].accName)
         {
             b[k++] = arr[i++];
         } else {
@@ -136,4 +139,101 @@ void MergeSortName(Account arr[], int lb, int ub)
         MergeSortName (arr, mid + 1, ub);
         MergeName (arr, lb, mid, ub);
     }
+}
+
+// Print Account
+void printAccounts(Account arr[], int n, bool ascending = true)
+{
+    cout << "\n  " << "ID" << "\t" << "Name" << "\t\t" << "Username" << "\t" << "Balance\n";
+    cout << "  ----+----------------+----------------+----------\n";
+    if (ascending) {
+        for (int i = 0; i < n; i++)
+        {
+            cout << "  " << arr[i].accID
+                 << "\t" << arr[i].accName
+                 << "\t\t" << arr[i].username
+                 << "\t" << arr[i].balance << "\n";
+        }
+    } else {
+        for (int i = 0; i >= n; i++)
+        {
+            cout << "  " << arr[i].accID
+                 << "\t" << arr[i].accName
+                 << "\t\t" << arr[i].username
+                 << "\t" << arr[i].balance << "\n";
+        }
+    }
+}
+
+// Print the menu
+void sortingMenu()
+{
+    int choice;
+    do
+    {
+        cout << "\n==============================\n";
+        cout <<   "       Sorting / Reports      \n";
+        cout <<   "==============================\n";
+
+        cout << " 1. Sort Balance by Ascending \n";
+        cout << " 2. Sort Balance by Descending \n";
+        cout << " 3. Sort Account by ID \n";
+        cout << " 4. Sort Account by Name (A - Z) \n";
+        cout << " 0. return to main menu \n";
+        cout << "Choice";
+        cin >> choice;
+
+        if (choice < 1 || choice > 4) continue;
+
+        Account* temp = new Account[globalCount];
+        for (int i = 0; i < globalCount; i++)
+        {
+            temp[i] = globalAccount[i];
+        }
+
+        switch (choice)
+        {
+            case 1:
+            {
+                MergeSortBalance (temp, 0, globalCount - 1);
+                cout << " -- Balance: Low to High -- \n";
+                printAccounts(temp, globalCount, true);
+                break;
+            }
+            case 2:
+            {
+                MergeSortBalance (temp, 0, globalCount - 1);
+                cout << " -- Balance: High to Low -- \n";
+                printAccounts(temp, globalCount, true);
+                break;
+            }
+            case 3:
+            {
+                MergeSortID (temp, 0, globalCount - 1);
+                cout << " -- Sorted by Account ID -- \n";
+                printAccounts (temp, globalCount, true);
+                break;
+            }
+            case 4:
+            {
+                MergeSortName(temp, 0, globalCount - 1);
+                cout << " -- Sorted by Name -- \n";
+                printAccounts (temp, globalCount, true);
+                break;
+            }
+            case 0:
+            {
+                cout << "returning...";
+                break;
+            }
+            default:
+            {
+                cout << "Invalid input. Try again.";
+                break;
+            }
+        }
+
+        delete[] temp;
+    }
+    while (choice != 0);
 }

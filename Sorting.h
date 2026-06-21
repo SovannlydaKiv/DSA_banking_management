@@ -14,5 +14,5 @@ void MergeName(Account arr[], int lb, int mid, int ub);
 void MergeSortName(Account arr[], int lb, int ub);
 
 // Printing function
-void printAccounts(Account arr[], int n);
+void printAccounts(Account arr[], int n, bool ascending = true);
 void sortingMenu();
