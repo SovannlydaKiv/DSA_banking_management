@@ -53,10 +53,20 @@ void addToBucket(Bucket* b, Account a) {
 }
 
 
-void hashInsert(Account a) {
-    int index = hashFunction(a.accountID); 
-    addToBucket(hashTable[index], a); 
+bool hashInsert(Account a) {
+    int index = hashFunction(a.accountID);
+    Element* e = hashTable[index]->head;
+    while (e != nullptr) {
+        if (e->data.accountID == a.accountID) {
+            cout << "Insert failed: Account ID " << a.accountID
+                << " already exists." << endl;
+            return false;   
+        }
+        e = e->next;
+    }
+    addToBucket(hashTable[index], a);
     cout << "Account " << a.accountID << " inserted at bucket " << index << endl;
+    return true;
 }
 
 Account* hashSearch(int id) {
