@@ -24,8 +24,5 @@ struct List{
 List* createList();
 
 void addAcc(List* ls, int id, string name, string username, string password, double bal);
-<<<<<<< HEAD
 void display(List* ls);
-=======
 void display(List* ls);
->>>>>>> vattey

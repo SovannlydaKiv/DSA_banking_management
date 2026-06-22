@@ -1,5 +1,5 @@
 #include "Sorting.h"
-#include <stdio.h>
+#include <iostream>
 #include <string.h>
 
 extern Account globalAccount[];
@@ -174,13 +174,12 @@ void sortingMenu()
         cout << "\n==============================\n";
         cout <<   "       Sorting / Reports      \n";
         cout <<   "==============================\n";
-
-        cout << " 1. Sort Balance by Ascending \n";
-        cout << " 2. Sort Balance by Descending \n";
-        cout << " 3. Sort Account by ID \n";
-        cout << " 4. Sort Account by Name (A - Z) \n";
-        cout << " 0. return to main menu \n";
-        cout << "Choice";
+        cout <<   "  1. Sort Balance by Ascending \n";
+        cout <<   "  2. Sort Balance by Descending \n";
+        cout <<   "  3. Sort Account by ID \n";
+        cout <<   "  4. Sort Account by Name (A - Z) \n";
+        cout <<   "  0. return to main menu \n";
+        cout <<   "  Choice";
         cin >> choice;
 
         if (choice < 1 || choice > 4) continue;
@@ -236,4 +235,5 @@ void sortingMenu()
         delete[] temp;
     }
     while (choice != 0);
+   
 }
