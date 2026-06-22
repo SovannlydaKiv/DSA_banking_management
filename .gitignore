@@ -1,2 +1,6 @@
 test/
+<<<<<<< HEAD
+=======
+.vscode/
+>>>>>>> vattey
 *.exe
