@@ -8,7 +8,6 @@ struct BSTNode
     BSTNode* right;
 };
 
-void bstNode();
 void bstInsert(Account a);
 BSTNode* bstSearch(int id);
 void bstInOrderDisplay();

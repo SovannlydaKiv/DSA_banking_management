@@ -5,30 +5,27 @@ using namespace std;
 static BSTNode* root = nullptr;
 
 // Insert
-static BSTNode* insert(BSTNode* root, Account a)
-{
+static BSTNode* insert(BSTNode* root, Account a) {
     if (root == nullptr)
     {
-        root = new BSTNode;
-        root -> data = a;
-        root -> left = nullptr;
-        root -> right = nullptr;
+        root            = new BSTNode;
+        root -> data    = a;
+        root -> left    = nullptr;
+        root -> right   = nullptr;
     } else if (a.accID < root -> data.accID) {
-        root -> left = insert (root -> left, a);
+        root -> left    = insert(root -> left, a);
     } else if (a.accID > root -> data.accID) {
-        root -> right = insert (root -> right, a);
+        root -> right   = insert (root -> right, a);
     }
     return root;
 }
 
 // Search
-static BSTNode* search(BSTNode* root, int id)
-{
-    if (root == nullptr)
-    {
+static BSTNode* search(BSTNode* root, int id) {
+    if (root == nullptr){
         return nullptr;
     } else if (id == root -> data.accID) {
-        return nullptr;
+        return root;
     } else if (id < root -> data.accID) {
         return search(root -> left, id);
     } else {
@@ -36,95 +33,79 @@ static BSTNode* search(BSTNode* root, int id)
     }
 }
 
-// Find Min
-static BSTNode* findMin(BSTNode* root)
-{
-    while (root -> left != nullptr)
-    {
+// Find min
+static BSTNode* findMin(BSTNode* root) {
+    while (root -> left != nullptr) {
         root = root -> left;
     }
     return root;
 }
 
 // Get size
-static int getSize (BSTNode* root)
-{
-    if (root != nullptr)
-    {
+static int getSize(BSTNode* root) {
+    if (root == nullptr) {
         return 0;
     } else {
         return (1 + getSize(root -> left) + getSize(root -> right));
     }
 }
 
-// In-order traversal
-static void inorder(BSTNode* root)
-{
-    if (root != nullptr)
-    {
+// In-Order traversal
+static void inorder (BSTNode* root) {
+    if (root != nullptr) {
         inorder (root -> left);
-        cout << " | ID : " << root -> data.accID
-             << " | Name: " << root -> data.accName
-             << " | Username: " << root -> data.username
-             << " | Balance: " << root -> data.balance << "\n";
+        cout << " | ID: "       << root -> data.accID
+             << " | Name: "     << root -> data.accName
+             << " | Balance: "  << root -> data.balance << "\n";
         inorder (root -> right);
     }
 }
+
 // Delete
-static void deleteNode(BSTNode* root, int id)
-{
-    BSTNode* parent = nullptr;
+static void deleteNode (BSTNode* root, int id) {
+    BSTNode* parent  = nullptr;
     BSTNode* current = nullptr;
 
-    while (current != nullptr && current -> data.accID != id)
-    {
+    while (current != nullptr && current -> data.accID != id) {
         parent = current;
-        if (id < current -> data.accID)
-        {
+        if (id < current -> data.accID) {
             current = current -> left;
         } else {
             current = current -> right;
         }
     }
 
-    if (current == nullptr)
-    {
+    if ( current == nullptr) {
         cout << "  not found in the tree\n";
         return;
     }
 
-    // Case 1: no child
-    if (current -> left == nullptr && current -> right == nullptr)
-    {
-        if (current != root)
-        {
-            if (parent -> left == current)
-            {
-                parent -> left = nullptr;
+    // Case 1: NO CHILD
+    if (current -> left == nullptr && current -> right == nullptr) {
+        if (current != root) {
+            if (parent -> left == current) {
+                parent -> left  = nullptr;
             } else {
                 parent -> right = nullptr;
             }
         } else {
-            root = nullptr;
+            root == nullptr;
         }
         delete current;
     }
 
-    // Case 2: two children
-    else if (current -> left != nullptr && current -> right != nullptr)
-    {
-        BSTNode* succ = findMin (current -> right);
+    // Case 2: TWO CHILD
+    else if (current -> left != nullptr && current -> right != nullptr) {
+        BSTNode* succ    = findMin (current -> right);
         Account savedAcc = succ -> data;
         deleteNode (root, succ -> data.accID);
-        current -> data = savedAcc;
+        current -> data  = savedAcc;
     }
 
-    // Case 3: one child
-    else
-    {
+    // Case 3: ONE CHILD
+    else {
         BSTNode* child = (current -> left) ? current -> left : current -> right;
-        if (current != root)
-        {
+        if (current != root) {
             if (current == parent -> left) {
                 parent -> left = child;
             } else {
@@ -137,116 +118,103 @@ static void deleteNode(BSTNode* root, int id)
     }
 }
 
-// Public function
+// Public Function
 void bstInsert (Account a) {
     root = insert(root, a);
-    cout << "   [BST] Account ID " << a.accID << " inserted.\n";
+    cout << "  [BST] Account ID " << a.accID << " inserted.\n";
 }
 
-BSTNode* bstSearch(int id)
-{
-    BSTNode* result = search (root, id);
-    if (result != nullptr)
-    {
-        cout << " | Found - ID: " << result -> data.accID
-             << " | Name: "       << result -> data.accName
-             << " | Balance: "    << result -> data.balance << "\n";
+BSTNode* bstSearch (int id) {
+    BSTNode* result = search(root, id);
+    if (result != nullptr) {
+        cout << " Found - ID: " << result -> data.accID
+             << " | Name: "     << result -> data.accName
+             << " | Balance: "  << result -> data.balance << "\n";
     } else {
-        cout << "  not found in the tree\n";
+        cout << "  not found in the tree.\n";
     }
     return result;
 }
 
-void bstInOrderDisplay()
-{
-    if (root == nullptr)
-    {
+void bstInOrderDisplay() {
+    if (root == nullptr) {
         cout << "  [BST] Tree is empty.\n";
         return;
     }
-    cout << "\n  -- In-Order Display (Sorted by Account ID) -- \n";
-    inorder(root);
-    cout << "\n  Total account in BST: " << getSize(root) << "\n";
+    cout << "\n  -- In-Order Display (sorted by Account ID) --\n";
+    inorder (root);
+    cout << "\n  Total account is BST: " << getSize(root) << "\n";
 }
 
-void bstDelete(int id)
-{
-    if (root == nullptr)
-    {
-        cout << "  [BST] Tree is Empty";
+void bstDelete (int id) {
+    if (root == nullptr) {
+        cout << "  [BST] Tree is empty.\n";
         return;
     }
-    deleteNode(root, id);
-    cout << "  [BST] Delete for ID " << id << " complete.\n"; 
+    deleteNode (root, id);
+    cout << "  [BST] Delete for ID " << id << " complete.\n";
 }
 
 // BST Menu
-void bstMenu()
-{
+void bstMenu() {
     int choice;
-    do
-    {
+    do {
         cout << "\n==============================\n";
         cout <<   "      BST Account Search      \n";
         cout <<   "==============================\n";
-        cout <<   "  1. Insert Account\n";
+        cout <<   "  1. Insert account\n";
         cout <<   "  2. Search by Account ID\n";
         cout <<   "  3. In-order display (sorted by ID)\n";
-        cout <<   "  4. Delete Account\n";
+        cout <<   "  4. Delete account\n";
         cout <<   "  0. Back\n";
-        cout <<   "  Choice: ";
+        cout <<   "Choice: ";
         cin >> choice;
 
         switch (choice) {
-            case 1:
-            {
+            case 1: {
                 Account a;
                 cout << "  Account ID: ";
                 cin >> a.accID;
-                cout << "  Name: ";
+                cout << "  Name      : ";
                 cin >> a.accName;
-                cout << "  Username: ";
-                cin >> a.username;
-                cout << "  Password: ";
+                cout << "  Password  : ";
                 cin >> a.password;
-                cout << "  Balance: ";
+                cout << "  Balance   : ";
                 cin >> a.balance;
                 bstInsert(a);
                 break;
             }
-            case 2:
-            {
+
+            case 2: {
                 int id;
                 cout << "  Enter Account ID to search: ";
                 cin >> id;
                 bstSearch(id);
                 break;
             }
-            case 3:
-            {
+
+            case 3: {
                 bstInOrderDisplay();
                 break;
             }
-            case 4:
-            {
+
+            case 4: {
                 int id;
                 cout << "  Enter Account ID to delete: ";
                 cin >> id;
                 bstDelete(id);
                 break;
             }
-            case 0:
-            {
+
+            case 0: {
                 cout << "  Returning...";
                 break;
             }
-            default:
-            {
-                cout << "  Invalid choice. Try again.\n";
+
+            default: {
+                cout << "  Invalid choice. Try Again.\n";
                 break;
             }
-        } 
+        }
     } while (choice != 0);
-
-   
 }
