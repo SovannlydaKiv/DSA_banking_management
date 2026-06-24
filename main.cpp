@@ -13,7 +13,7 @@ string generateID(List* ls){
 
 int main(){
     List* myBank = createList();
-    loadFromFile(myBank, "data_for_bank.txt");
+    loadFromFile(myBank, "bank_data.txt");
     int choice;
     bool isLoggedIn = false;
     string loggedInID = "";
@@ -97,7 +97,6 @@ int main(){
                 cout << "Enter destination account ID: ";
                 cin >> toAcc;
 
-                // fromAcc is automatically the logged in user
                 addTrans(myBank, loggedInID, toAcc, type, amount);
                 cout << "Transaction done!" << endl << endl;
             }

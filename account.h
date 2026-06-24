@@ -40,7 +40,7 @@ void updateAcc(List* ls, string id);
 void searchAcc(List* ls, string id);
 void saveToFile(List* ls, string filename);
 void loadFromFile(List* ls, string filename);
-void display(List* ls);
+void display(List* ls);                                 
 string login(List* ls, string id, string password);
 string hashPassword(string password);
 
