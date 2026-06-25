@@ -13,7 +13,7 @@ string generateID(List* ls){
 
 int main(){
     List* myBank = createList();
-    loadFromFile(myBank, "bank_data.txt");
+    loadFromFile(myBank, "bank_data.csv");
     int choice;
     bool isLoggedIn = false;
     string loggedInID = "";
@@ -151,7 +151,7 @@ int main(){
             }
         }
         else if (choice == 9){
-            saveToFile(myBank, "bank_data.txt");
+            saveToFile(myBank, "bank_data.csv");
             cout << "Bye!" << endl;
         }
         else{
