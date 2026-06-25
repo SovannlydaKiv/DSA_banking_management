@@ -1,16 +1,26 @@
 #include "account.h"
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 using namespace std;
+
+string generateID(List* ls){
+    srand(time(0));
+    int randNum = rand() % 9000 + 1000;
+    string newID = "BD-" + to_string(randNum);
+    return newID;
+}
 
 int main(){
     List* myBank = createList();
+    loadFromFile(myBank, "bank_data.txt");
     int choice;
     bool isLoggedIn = false;
-    int loggedInID = -1;
+    string loggedInID = "";
 
     do{
         cout << "==== Welcome to BDSM (Banking Data System Management) ====" << endl;
-        cout << "Please pick one of our services:" << endl;
+        cout << "Please pick one of our services:" << endl << endl;
         cout << "1. Login" << endl;
         cout << "2. Register/ Add an account" << endl;
         cout << "3. Add transaction" << endl;
@@ -25,63 +35,54 @@ int main(){
 
         if (choice == 1){
             if (isLoggedIn){
-                cout << "You are already logged in!" << endl << endl;
+                cout << "Already logged in!" << endl << endl;
             }
             else{
-                int id;
-                string password;
-
+                string id, password;
                 cout << "Enter account ID: ";
                 cin >> id;
-
                 cout << "Enter password: ";
                 cin >> password;
-
                 loggedInID = login(myBank, id, password);
-                if (loggedInID != -1){
+                if (loggedInID != ""){
                     isLoggedIn = true;
                 }
             }
         }
         else if (choice == 2){
             if (isLoggedIn){
-                cout << "You are already logged in, please logout first!" << endl << endl;
+                cout << "Please logout first before registering a new account!" << endl << endl;
             }
             else{
-                int id;
                 string name, password;
                 double balance;
 
                 cout << "===== Register New Account =====" << endl;
-                cout << "Enter Account ID: ";
-                cin >> id;
 
-                if (accExists(myBank, id)){
-                    cout << "Account ID already exists, please use a different ID" << endl << endl;
-                }
-                else{
-                    cin.ignore();
-                    cout << "Enter Full Name: ";
-                    getline(cin, name);
+                string id = generateID(myBank);
 
-                    cout << "Enter Password: ";
-                    cin >> password;
+                cin.ignore();
+                cout << "Enter Full Name: ";
+                getline(cin, name);
 
-                    cout << "Enter Initial Balance: ";
-                    cin >> balance;
+                cout << "Enter Password: ";
+                cin >> password;
 
-                    addAcc(myBank, id, name, password, balance);
-                    cout << "Account registered successfully! Please login to continue." << endl << endl;
-                }
+                cout << "Enter Initial Balance: ";
+                cin >> balance;
+
+                addAcc(myBank, id, name, password, balance);
+                cout << "Your new account ID is: " << id << endl;
+                cout << "Registration successful! Please save your ID and login again to continue." << endl << endl;
             }
         }
         else if (choice == 3){
             if (!isLoggedIn){
-                cout << "You need to login first!" << endl;
-                cout << "Please select option 1 to login" << endl << endl;
+                cout << "You need to login first!" << endl << endl;
             }
             else{
-                int toAcc, type;
+                int type;
+                string toAcc;
                 double amount;
 
                 cout << "Select transaction type:" << endl;
@@ -97,33 +98,32 @@ int main(){
                 cin >> toAcc;
 
                 addTrans(myBank, loggedInID, toAcc, type, amount);
-                cout << "Transaction added successfully!" << endl << endl;
+                cout << "Transaction done!" << endl << endl;
             }
         }
         else if (choice == 4){
             if (!isLoggedIn){
-                cout << "You need to login first!" << endl;
-                cout << "Please select option 1 to login" << endl << endl;
+                cout << "You need to login first!" << endl << endl;
             }
             else{
-                cout << "Are you sure you want to delete your account? (1 = Yes, 2 = No): ";
+                cout << "Are you sure you want to delete? (1 = Yes, 2 = No): ";
                 int confirm;
                 cin >> confirm;
+
                 if (confirm == 1){
                     deleteAcc(myBank, loggedInID);
                     isLoggedIn = false;
-                    loggedInID = -1;
-                    cout << "Account deleted successfully!" << endl << endl;
+                    loggedInID = "";
+                    cout << "Account deleted!" << endl << endl;
                 }
                 else{
-                    cout << "Account deletion cancelled" << endl << endl;
+                    cout << "Cancelled" << endl << endl;
                 }
             }
         }
         else if (choice == 5){
             if (!isLoggedIn){
-                cout << "You need to login first!" << endl;
-                cout << "Please select option 1 to login" << endl << endl;
+                cout << "You need to login first!" << endl << endl;
             }
             else{
                 updateAcc(myBank, loggedInID);
@@ -131,8 +131,7 @@ int main(){
         }
         else if (choice == 6){
             if (!isLoggedIn){
-                cout << "You need to login first!" << endl;
-                cout << "Please select option 1 to login" << endl << endl;
+                cout << "You need to login first!" << endl << endl;
             }
             else{
                 searchAcc(myBank, loggedInID);
@@ -147,15 +146,16 @@ int main(){
             }
             else{
                 isLoggedIn = false;
-                loggedInID = -1;
-                cout << "Logged out successfully!" << endl << endl;
+                loggedInID = "";
+                cout << "Logged out!" << endl << endl;
             }
         }
         else if (choice == 9){
-            cout << "Goodbye!" << endl;
+            saveToFile(myBank, "bank_data.txt");
+            cout << "Bye!" << endl;
         }
         else{
-            cout << "Invalid input, please try again" << endl << endl;
+            cout << "Invalid option, try again" << endl << endl;
         }
     } while (choice != 9);
 

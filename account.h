@@ -3,7 +3,7 @@
 using namespace std;
 
 struct Account{
-    int accID;              //id of user here
+    string accID;              //id of user here
     string accName;         //name of the account owner
     string password;        //users password
     double balance;         //users balance
@@ -11,8 +11,8 @@ struct Account{
 
 struct Transaction{
     int transID;
-    int fromAcc;
-    int toAcc;
+    string fromAcc;
+    string toAcc;
     int type;       //what type of transaction, is it deposit or withdrawal or transfer
     double amount;
 };
@@ -33,12 +33,15 @@ struct List{
 
 List* createList();
 
-void addAcc(List* ls, int id, string name, string password, double bal);
-void addTrans(List* ls, int fromAcc, int toAcc, int type, double amount);
-void deleteAcc(List* ls, int id);
-void updateAcc(List* ls, int id);
-void searchAcc(List* ls, int id);
-int login(List* ls, int id, string password);
-bool accExists(List* ls, int id);
-void display(List* ls);
-void display(List* ls);
+void addAcc(List* ls, string id, string name, string password, double bal);
+void addTrans(List* ls, string fromAcc, string toAcc, int type, double amount);
+void deleteAcc(List* ls, string id);
+void updateAcc(List* ls, string id);
+void searchAcc(List* ls, string id);
+void saveToFile(List* ls, string filename);
+void loadFromFile(List* ls, string filename);
+void display(List* ls);                                 
+string login(List* ls, string id, string password);
+string hashPassword(string password);
+
+
