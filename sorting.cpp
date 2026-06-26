@@ -120,7 +120,7 @@ void MergeSortName (Account arr[], int lb, int ub) {
 }
 
 // Print
-void printAccount (Account arr[], int n, bool ascending) {
+void printAccounts (Account arr[], int n, bool ascending) {
     cout << "\n" << "ID" << "\t" << "Name" << "\t\t\t" << "Balance\n";
     cout << "  ----+------------------------+----------\n";
 

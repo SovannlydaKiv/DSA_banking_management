@@ -9,6 +9,6 @@ struct BSTNode
 };
 
 void bstInsert(Account a);
-BSTNode* bstSearch(int id);
+BSTNode* bstSearch(string id);
 void bstInOrderDisplay();
-void bstDelete(int id);
+void bstDelete(string id);
