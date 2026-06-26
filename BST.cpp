@@ -131,3 +131,68 @@ void bstDelete (string id) {
     deleteNode (bstRoot, id);
     cout << "  [BST] Delete for ID " << id << " complete.\n";
 }
+
+// BST Menu
+void bstMenu() {
+    int choice;
+    do {
+        cout << "\n==============================\n";
+        cout <<   "      BST Account Search      \n";
+        cout <<   "==============================\n";
+        cout <<   "  1. Insert account\n";
+        cout <<   "  2. Search by Account ID\n";
+        cout <<   "  3. In-order display (sorted by ID)\n";
+        cout <<   "  4. Delete account\n";
+        cout <<   "  0. Back\n";
+        cout <<   "Choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                Account a;
+                cout << "  Account ID: ";
+                cin >> a.accID;
+                cout << "  Name      : ";
+                cin.ignore();
+                getline(cin, a.accName);
+                cout << "  Password  : ";
+                cin >> a.password;
+                cout << "  Balance   : ";
+                cin >> a.balance;
+                bstInsert(a);
+                break;
+            }
+
+            case 2: {
+                string id;
+                cout << "  Enter Account ID to search: ";
+                cin >> id;
+                bstSearch(id);
+                break;
+            }
+
+            case 3: {
+                bstInOrderDisplay();
+                break;
+            }
+
+            case 4: {
+                string id;
+                cout << "  Enter Account ID to delete: ";
+                cin >> id;
+                bstDelete(id);
+                break;
+            }
+
+            case 0: {
+                cout << "  Returning...\n";
+                break;
+            }
+
+            default: {
+                cout << "  Invalid choice. Try Again.\n";
+                break;
+            }
+        }
+    } while (choice != 0);
+}

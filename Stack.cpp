@@ -2,24 +2,15 @@
 #include <iostream>
 using namespace std;
 
-struct StackNode
-{
-    Transaction data;
-    StackNode *next;
-};
-
-struct Stack
-{
-    StackNode *top;
-    int n;
-};
-
-static Stack *createStack()
-{
+static Stack *createStack() {
     Stack *s = new Stack;
-    s->top = nullptr;
-    s->n = 0;
+    s -> top = nullptr;
+    s -> n = 0;
     return s;
+}
+
+bool isEmpty (Stack* s) {
+    return s -> n == 0;
 }
 
 static void push(Stack *s, Transaction data)
@@ -31,7 +22,7 @@ static void push(Stack *s, Transaction data)
     s->n++;
 }
 
-static Transaction pop(Stack *s)
+Transaction pop(Stack *s)
 {
     // Caller must check s->n > 0 before calling.
     StackNode *e = s->top;
@@ -42,41 +33,62 @@ static Transaction pop(Stack *s)
     return value;
 }
 
-static Stack *actionHistory = createStack();
-
-void pushAction(Transaction t)
-{
-    push(actionHistory, t);
-    cout << "Recorded: " << t.action << " $" << t.amount
-         << " on account " << t.accountID << endl;
+Transaction peek (Stack* s) {
+    return s -> top -> data;
 }
 
-void undoLastAction()
-{
-    if (actionHistory->n == 0)
-    {
-        cout << "Nothing to undo.\n";
-        return;
-    }
-    Transaction last = pop(actionHistory);
-    cout << "Undid: " << last.action << " $" << last.amount
-         << " on account " << last.accountID << endl;
-}
-
-void viewActionHistory()
-{
-    cout << "Action history (most recent first):\n";
-    if (actionHistory->n == 0)
-    {
+void display (Stack* s) {
+    if (isEmpty(s)) {
         cout << "  (empty)\n";
         return;
     }
-    StackNode *e = actionHistory->top;
-    while (e != nullptr)
-    {
-        cout << "  " << e->data.action << " $" << e->data.amount
-             << " on account " << e->data.accountID << endl;
-        e = e->next;
+    StackNode* e = s -> top;
+    while (e != nullptr) {
+        cout << "  " << e -> data.fromAcc << " -> " <<e -> data.toAcc
+             << " $" << e -> data.amount << "\n";
+        e = e -> next;
+    }
+}
+
+static Stack *actionHistory = createStack();
+
+static void printTrans(const Transaction& t) {
+    string typeName = (t.type == 1) ? "Deposit" : (t.type == 2) ? "Withdraw" : "Transfer";
+    cout << typeName << " $" << t.amount
+         << " | From: " << t.fromAcc << " To: " << t.toAcc;
+}
+
+void pushAction(Transaction t) {
+    push (actionHistory, t);
+    cout << "  Recorded: ";
+    printTrans(t);
+    cout << endl;
+}
+
+void undoLastAction() {
+    if (isEmpty(actionHistory)) {
+        cout << "  Nothing to undo." << endl;
+        return;
+    }
+    Transaction last = pop(actionHistory);
+    cout << "  Undid: ";
+    printTrans (last);
+    cout << endl;
+}
+
+void viewActionHistory() {
+    cout << "  Action history (most recent first): " << endl;
+    if (isEmpty(actionHistory)) {
+        cout << "  (empty)" << endl;
+        return;
+    }
+    StackNode* e = actionHistory -> top;
+    int i = 1;
+    while (e != nullptr) {
+        cout << "  " << i++ << ". ";
+        printTrans(e -> data);
+        cout << endl;
+        e = e -> next;
     }
 }
 
@@ -85,29 +97,17 @@ void stackMenu()
     int choice;
     do
     {
-        cout << "\n--- Stack Menu (action history) ---\n";
-        cout << "1. Record an action\n";
-        cout << "2. Undo last action\n";
-        cout << "3. View history\n";
+        cout << "\n--- Stack Menu (action history) ---\n"; // remove the "record action", repetitive, already exist in main (option 3)
+        cout << "1. Undo last action\n";
+        cout << "2. View history\n";
         cout << "0. Back\n";
         cout << "Choice: ";
         cin >> choice;
         if (choice == 1)
         {
-            Transaction t;
-            cout << "Account ID: ";
-            cin >> t.accountID;
-            cout << "Action (deposit/withdraw): ";
-            cin >> t.action;
-            cout << "Amount: ";
-            cin >> t.amount;
-            pushAction(t);
-        }
-        else if (choice == 2)
-        {
             undoLastAction();
         }
-        else if (choice == 3)
+        else if (choice == 2)
         {
             viewActionHistory();
         }
