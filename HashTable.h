@@ -18,23 +18,28 @@ struct Bucket {
 
 Bucket* hashTable[TABLE_SIZE]; 
 
-int hashFunction(int accountID) {
-    return ((accountID % TABLE_SIZE) + TABLE_SIZE) % TABLE_SIZE;     // figure out the number so it can be orginize 
+int hashFunction(string value) {
+    int sum = 0;
+    for (char c : value) {
+        sum += c;
+    }
+    return sum % TABLE_SIZE;
 }
 
 
 
 Bucket* createEmptyBucket() {
-    Bucket* b = new Bucket; 
-    b->tail = nullptr;
+    Bucket* b = new Bucket;
+    b -> head = nullptr; 
+    b -> tail = nullptr;
     return b;
 }
 
 void initHashTable() {
     for (int i = 0; i < TABLE_SIZE; i++) {   
         hashTable[i] = createEmptyBucket(); 
+    }
 }
-
 
 // help append the new data to the previous 
 void addToBucket(Bucket* b, Account a) {
@@ -42,91 +47,125 @@ void addToBucket(Bucket* b, Account a) {
     e->data = a;
     e->next = nullptr;
 
-    if (b->n == 0) {
+    if (b -> n == 0) {
         b->head = e;
         b->tail = e;
     } else {
-        b->tail->next = e;   // append tthe new data 
-        b->tail = e;         // new node becomes the last node
+        b->tail->next = e;   // append the new data 
+        b->tail = e;        // new node becomes the last node
     }
     b->n++;
 }
 
 
 bool hashInsert(Account a) {
-    int index = hashFunction(a.accountID);
-    Element* e = hashTable[index]->head;
+    int index = hashFunction (a.accID);
+
+    // Check for duplicated accID first
+    Element* e = hashTable[index] -> head;
     while (e != nullptr) {
-        if (e->data.accountID == a.accountID) {
-            cout << "Insert failed: Account ID " << a.accountID
-                << " already exists." << endl;
-            return false;   
+        if (e -> data.accID == a.accID) {
+            cout << "Insert Failed: Account ID " << a.accID << " already exists." << endl;
+            return;
         }
-        e = e->next;
+        e = e -> next;
     }
+    
     addToBucket(hashTable[index], a);
-    cout << "Account " << a.accountID << " inserted at bucket " << index << endl;
-    return true;
+    cout << "Account " << a.accID << " inserted at bucket " << index << endl;
 }
 
-Account* hashSearch(int id) {
-    int index = hashFunction(id)
-    Element* e = hashTable[index]->head;
-
-    while (e != nullptr) {
-        if (e->data.accountID == id) { 
-            return &(e->data);   // when match we output the result and exit
-        }
-        e = e->next;
-    }
-    return nullptr;   
-}
-
-
-bool hashDelete(int id) {
-    int index = hashFunction(id);
-    Element* e = hashTable[index]->head;
-    Element* prev = nullptr; 
-
-    while (e != nullptr) {
-        if (e->data.accountID == id) {
-            if (prev == nullptr) {
-                hashTable[index]->head = e->next;
-                if (hashTable[index]->tail == e) {
-                    hashTable[index]->tail = nullptr;
-                }
-            } else {
-                prev->next = e->next; // skip one
-                if (hashTable[index]->tail == e) { // if last, we remove last and the new tail will be come prev
-                    hashTable[index]->tail = prev;
-                }
+bool hashSearch(string value) {
+    int index = hashFunction(value);
+    if (hashTable[index] -> n != 0) {
+        Element* e = hashTable[index] -> head;
+        while (e != nullptr) {
+            if (e -> data.accID == value) {
+                cout << value << " is contained in position " << index << endl;
+                cout << "  Name: " << e -> data.accName << " Balance: " << e -> data.balance << endl;
+                return true;
             }
-            delete e;
-            hashTable[index]->n--;
-            return true;
+            e = e -> next;
         }
-        prev = e; // move along, prev is no longer empty 
-        e = e->next; 
     }
-    return false;  
+
+    cout << value << " is not found." << endl;
+    return false;
+}
+
+
+bool hashDelete(string value) {
+    int index = hashFunction(value);
+    if (hashTable[index] -> n != 0) {
+        Element* e = hashTable[index] -> head;
+        Element* prev = nullptr;
+
+        while (e != nullptr) {
+            if (e -> data.accID == value) {
+                if (prev == nullptr) {
+                    hashTable[index] -> head = e -> next;
+                    if (hashTable[index] -> tail == e) {
+                        hashTable[index] -> tail = nullptr;
+                    }
+                } else {
+                    prev -> next = e -> next;
+                    if (hashTable[index] -> tail == e) {
+                        hashTable[index] -> tail = prev;
+                    }
+                }
+
+                delete e;
+                hashTable[index] -> n--;
+                cout << value << " is removed successfully." << endl;
+                return true;
+            }
+            prev = e;
+            e = e -> next;
+        }
+    }
+
+    cout << "Failed to delete as " << value << " does not exists." << endl;
+    return false;
 }
 
 void hashDisplay() {
     for (int i = 0; i < TABLE_SIZE; i++) {
-        cout << i << " --> ";
-        Element* e = hashTable[i]->head;
-        if (e == nullptr) {
+        cout << i << "\t--> ";
+        if (hashTable[i] -> n != 0) {
+            Element* e = hashTable[i] -> head;
+            while (e != nullptr) {
+                cout << "[" << e -> data.accID << " " << e -> data.accName
+                     << " $" << e -> data.balance << "]";
+                e = e -> next;
+            }
+        } else {
             cout << "NULL";
-        }
-        while (e != nullptr) {
-            cout << "[ID:" << e->data.accountID << " " << e->data.name
-                << " $" << e->data.balance << "] ";
-            e = e->next;
         }
         cout << endl;
     }
 }
 
+void hashLoadFromList (List* ls) {
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        Element* e = hashTable[i] -> head;
+        while (e != nullptr) {
+            Element* next = e -> next;
+            delete e;
+            e = next;
+        }
+        hashTable[i] -> head = nullptr;
+        hashTable[i] -> tail = nullptr;
+        hashTable[i] -> n = 0;
+    }
+
+    Node* cur = ls -> head;
+    while (cur != nullptr) {
+        if (cur -> type == 0) {
+            hashInsert (cur -> data);
+        }
+        cur = cur -> next;
+    }
+}
 
 void hashTableMenu() {
     int choice;
@@ -142,30 +181,25 @@ void hashTableMenu() {
 
         if (choice == 1) {
             Account a;
-            cout << "Enter Account ID: "; cin >> a.accountID;
-            cout << "Enter Name: ";       cin >> a.name;
-            cout << "Enter Type (Savings/Checking): "; cin >> a.type;
-            cout << "Enter Balance: ";    cin >> a.balance;
-            a.status = "Active";
+            cout << "Enter Account ID: "; 
+            cin >> a.accID;
+            cout << "Enter Name: ";
+            cin >> a.accName;
+            cout << "Enter Balance: ";   
+            cin >> a.balance;
             hashInsert(a);
         }
         else if (choice == 2) {
-            int id;
-            cout << "Enter Account ID to search: "; cin >> id;
-            Account* found = hashSearch(id);
-            if (found != nullptr) {
-                cout << "Found -> ID: " << found->accountID
-                    << ", Name: " << found->name
-                    << ", Balance: " << found->balance << endl;
-            } else {
-                cout << "Account not found.\n";
-            }
+            string id;
+            cout << "Enter Account ID to search: ";
+            cin >> id;
+            hashSearch(id);
         }
         else if (choice == 3) {
-            int id;
-            cout << "Enter Account ID to delete: "; cin >> id;
-            if (hashDelete(id)) cout << "Deleted successfully.\n";
-            else cout << "Account not found.\n";
+            string id;
+            cout << "Enter Account ID to delete: ";
+            cin >> id;
+            hashDelete(id);
         }
         else if (choice == 4) {
             hashDisplay();
