@@ -2,7 +2,7 @@
 #include <iostream>
 using namespace std;
 
-static Queue *createQueue()
+Queue *createQueue()
 {
     Queue *q = new Queue;
     q->n = 0;
@@ -11,12 +11,12 @@ static Queue *createQueue()
     return q;
 }
 
-static bool isEmpty(Queue *q)
+bool isEmpty(Queue *q)
 {
     return q->n == 0;
 }
 
-static void enqueue(Queue *q, int data)
+void enqueue(Queue *q, int data)
 {
     Element *e = new Element;
     e->data = data;
@@ -36,7 +36,7 @@ static void enqueue(Queue *q, int data)
     q->n += 1;
 }
 
-static int dequeue(Queue *q)
+int dequeue(Queue *q)
 {
     if (isEmpty(q))
     {
@@ -55,35 +55,43 @@ static int dequeue(Queue *q)
     return value;
 }
 
-int front (Queue* q) {
-    if (isEmpty (q)) {
+int front(Queue *q)
+{
+    if (isEmpty(q))
+    {
         cout << "Queue is empty" << endl;
         return -1;
     }
-    return q -> front -> data;
+    return q->front->data;
 }
 
-int rear (Queue* q) {
-    if (isEmpty(q)) {
+int rear(Queue *q)
+{
+    if (isEmpty(q))
+    {
         cout << "Queue is empty" << endl;
         return -1;
     }
-    return q -> rear -> data;
+    return q->rear->data;
 }
 
-int getSize (Queue* q) {
-    return q -> n;
+int getSize(Queue *q)
+{
+    return q->n;
 }
 
-void display (Queue* q) {
-    if (isEmpty(q)) {
+void display(Queue *q)
+{
+    if (isEmpty(q))
+    {
         cout << "Queue is empty" << endl;
         return;
     }
-    Element* e = q -> front;
-    while (e != nullptr) {
-        cout << e -> data << "  ";
-        e = e -> next;
+    Element *e = q->front;
+    while (e != nullptr)
+    {
+        cout << e->data << "  ";
+        e = e->next;
     }
     cout << endl;
 }
