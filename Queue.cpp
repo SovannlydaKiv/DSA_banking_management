@@ -1,20 +1,8 @@
+#include "Queue.h"
 #include <iostream>
 using namespace std;
 
-struct Element
-{
-    int data;
-    Element *next;
-};
-
-struct Queue
-{
-    int n;
-    Element *front;
-    Element *rear;
-};
-
-static Queue *createQueue()
+Queue *createQueue()
 {
     Queue *q = new Queue;
     q->n = 0;
@@ -23,12 +11,12 @@ static Queue *createQueue()
     return q;
 }
 
-static bool isEmpty(Queue *q)
+bool isEmpty(Queue *q)
 {
     return q->n == 0;
 }
 
-static void enqueue(Queue *q, int data)
+void enqueue(Queue *q, int data)
 {
     Element *e = new Element;
     e->data = data;
@@ -48,7 +36,7 @@ static void enqueue(Queue *q, int data)
     q->n += 1;
 }
 
-static int dequeue(Queue *q)
+int dequeue(Queue *q)
 {
     if (isEmpty(q))
     {
@@ -65,6 +53,47 @@ static int dequeue(Queue *q)
     delete e;
     q->n -= 1;
     return value;
+}
+
+int front(Queue *q)
+{
+    if (isEmpty(q))
+    {
+        cout << "Queue is empty" << endl;
+        return -1;
+    }
+    return q->front->data;
+}
+
+int rear(Queue *q)
+{
+    if (isEmpty(q))
+    {
+        cout << "Queue is empty" << endl;
+        return -1;
+    }
+    return q->rear->data;
+}
+
+int getSize(Queue *q)
+{
+    return q->n;
+}
+
+void display(Queue *q)
+{
+    if (isEmpty(q))
+    {
+        cout << "Queue is empty" << endl;
+        return;
+    }
+    Element *e = q->front;
+    while (e != nullptr)
+    {
+        cout << e->data << "  ";
+        e = e->next;
+    }
+    cout << endl;
 }
 
 static Queue *customerQueue = createQueue();
@@ -89,15 +118,7 @@ void dequeueCustomer()
 void displayQueue()
 {
     cout << "Customers waiting (front -> rear): ";
-    Element *e = customerQueue->front;
-    if (e == nullptr)
-        cout << "(none)";
-    while (e != nullptr)
-    {
-        cout << e->data << " ";
-        e = e->next;
-    }
-    cout << endl;
+    display(customerQueue);
 }
 
 void queueMenu()
