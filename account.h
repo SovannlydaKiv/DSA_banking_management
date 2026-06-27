@@ -3,16 +3,14 @@
 #include <string>
 using namespace std;
 
-struct Account
-{
+struct Account{
     string accID;    // id of user here
     string accName;  // name of the account owner
     string password; // users password
     double balance;  // users balance
 };
 
-struct Transaction
-{
+struct Transaction{
     int transID;
     string fromAcc;
     string toAcc;
@@ -20,16 +18,14 @@ struct Transaction
     double amount;
 };
 
-struct Node
-{
+struct Node{
     int type;
     Account data;
     Transaction transData;
     Node *next;
 };
 
-struct List
-{
+struct List{
     int n;
     int transCounter;
     Node *head;
@@ -48,3 +44,4 @@ void loadFromFile(List *ls, string filename);
 void display(List *ls);
 string login(List *ls, string id, string password);
 string hashPassword(string password);
+string getPassword();

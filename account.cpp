@@ -1,6 +1,7 @@
 #include "account.h"
 #include <iostream>
 #include <fstream>
+#include <conio.h>
 using namespace std;
 
 List* createList(){
@@ -11,6 +12,24 @@ List* createList(){
     ls -> head = nullptr;
     ls -> tail = nullptr;
     return ls;
+}
+string getPassword(){
+    string password;
+    char ch;
+    while ((ch = _getch()) != '\r'){
+        if (ch == '\b'){
+            if (!password.empty()){
+                password.pop_back();
+                cout << "\b \b";
+            }
+        }
+        else{
+            password += ch;
+            cout << '*';
+        }
+    }
+    cout << endl;
+    return password;
 }
 
 string hashPassword(string password){
@@ -114,8 +133,7 @@ void updateAcc(List* ls, string id){
             }
             else if (choice == 2){
                 cout << "Enter new password: ";
-                string newPass;
-                cin >> newPass;
+                string newPass = getPassword();
 
                 tmp -> data.password = hashPassword(newPass);
             }
