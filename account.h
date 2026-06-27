@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <string>
 using namespace std;
@@ -42,6 +43,6 @@ void saveToFile(List* ls, string filename);
 void loadFromFile(List* ls, string filename);
 void display(List* ls);                                 
 string login(List* ls, string id, string password);
-string hashPassword(string password);
+string getPassword(string password);
 
 

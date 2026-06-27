@@ -19,7 +19,7 @@ int main(){
     string loggedInID = "";
 
     do{
-        cout << "==== Welcome to BDSM (Banking Data System Management) ====" << endl;
+        cout << "==== Welcome to our Banking Data System Management ====" << endl;
         cout << "Please pick one of our services:" << endl << endl;
         cout << "1. Login" << endl;
         cout << "2. Register/ Add an account" << endl;
