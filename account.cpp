@@ -289,13 +289,13 @@ void display(List* ls){
     }
     while (tmp != nullptr){
         if (tmp -> type == 0){
-            cout << "----Account----" << endl;
+            cout << "==== Account ====" << endl;
             cout << "Your ID: " << tmp -> data.accID << "\n";
             cout << "Your account name is: " << tmp -> data.accName << "\n";
             cout << "Your current balance is: $" << tmp -> data.balance << "\n" << endl;
         }
         else if (tmp -> type == 1){
-            cout << "----Transaction----" << endl;
+            cout << "==== Transaction ====" << endl;
             cout << "Transaction ID: " << tmp -> transData.transID << "\n";
             if (tmp -> transData.type == 1){
                 cout << "Type: Deposit" << "\n";

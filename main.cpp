@@ -55,7 +55,7 @@ void mainMenu(){
 
     do{
         clearConsole();
-        cout << "==== Welcome to our Banking Data System Management) ====\n";
+        cout << "==== Welcome to our Banking Data System Management ====\n";
         cout << "1. Login\n";
         cout << "2. Register / Add an account\n";
         cout << "3. Exit\n";
@@ -106,6 +106,7 @@ void mainMenu(){
 
             rebuildGlobalArray(myBank);
             bstLoadFromList(myBank);
+            saveToFile(myBank, "bank_data.csv");
 
             cout << "\nPress enter to continue...";
             cin.ignore();
@@ -133,7 +134,7 @@ void page2(){
         cout << "2. Delete account\n";
         cout << "3. Update account\n";
         cout << "4. Search account\n";
-        cout << "5. Display all\n";
+        cout << "5. Display all accounts\n";
         cout << "6. Sorting / Reports\n";
         cout << "7. BST Account Search\n";
         cout << "8. Action History (Stack)\n";
