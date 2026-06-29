@@ -6,6 +6,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include "HashTable.h"
 using namespace std;
 
 // ── Global array for sorting (mirrors the linked list accounts) ───────────────
@@ -44,6 +45,8 @@ int main()
     // Sync globals and BST from loaded data
     rebuildGlobalArray(myBank);
     bstLoadFromList(myBank);
+    initHashTable();          // ADDED
+    hashLoadFromList(myBank);
 
     int choice;
     bool isLoggedIn = false;
@@ -65,7 +68,8 @@ int main()
         cout << "10. BST Account Search\n";
         cout << "11. Action History (Stack)\n";
         cout << "12. Customer Queue\n";
-        cout << "13. Exit\n";
+        cout << "13. Hash Table Lookup\n";
+        cout << "14. Exit\n";
         cout << "Input your option: ";
         cin >> choice;
 
@@ -121,6 +125,7 @@ int main()
                 // Keep globals and BST in sync
                 rebuildGlobalArray(myBank);
                 bstLoadFromList(myBank);
+                hashLoadFromList(myBank);
             }
         }
         else if (choice == 3)
@@ -184,6 +189,7 @@ int main()
                     loggedInID = "";
                     cout << "Account deleted!\n";
                     rebuildGlobalArray(myBank);
+                    hashLoadFromList(myBank);
                 }
                 else
                 {
@@ -202,6 +208,7 @@ int main()
                 updateAcc(myBank, loggedInID);
                 rebuildGlobalArray(myBank);
                 bstLoadFromList(myBank); // reload BST after update
+                hashLoadFromList(myBank);
             }
         }
         else if (choice == 6)
@@ -257,6 +264,10 @@ int main()
         }
         else if (choice == 13)
         {
+            hashTableMenu();
+        }
+        else if (choice == 14)
+        {
             saveToFile(myBank, "bank_data.csv");
             cout << "Bye!\n";
         }
@@ -264,7 +275,7 @@ int main()
         {
             cout << "Invalid option, try again\n";
         }
-    } while (choice != 13);
+    } while (choice != 14);
 
     return 0;
 }
