@@ -6,6 +6,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include "HashTable.h"
 using namespace std;
 
 #define MAX_ACCOUNTS 1000
@@ -50,15 +51,39 @@ string generateID(List *ls)
     return newID;
 }
 
-void mainMenu(){
-    int choice;
+int main()
+{
+    List *myBank = createList();
+    loadFromFile(myBank, "bank_data.csv");
 
-    do{
-        clearConsole();
-        cout << "==== Welcome to our Banking Data System Management ====\n";
-        cout << "1. Login\n";
-        cout << "2. Register / Add an account\n";
-        cout << "3. Exit\n";
+    // Sync globals and BST from loaded data
+    rebuildGlobalArray(myBank);
+    bstLoadFromList(myBank);
+    initHashTable();          // ADDED
+    hashLoadFromList(myBank);
+
+    int choice;
+    bool isLoggedIn = false;
+    string loggedInID = "";
+
+    do
+    {
+        cout << "\n==== Welcome to BDSM (Banking Data System Management) ====\n";
+        cout << "Please pick one of our services:\n\n";
+        cout << "1.  Login\n";
+        cout << "2.  Register / Add an account\n";
+        cout << "3.  Add transaction\n";
+        cout << "4.  Delete account\n";
+        cout << "5.  Update account\n";
+        cout << "6.  Search account\n";
+        cout << "7.  Display all\n";
+        cout << "8.  Logout\n";
+        cout << "9.  Sorting / Reports\n";
+        cout << "10. BST Account Search\n";
+        cout << "11. Action History (Stack)\n";
+        cout << "12. Customer Queue\n";
+        cout << "13. Hash Table Lookup\n";
+        cout << "14. Exit\n";
         cout << "Input your option: ";
         cin >> choice;
 
@@ -104,51 +129,23 @@ void mainMenu(){
             cout << "Your new account ID is: " << id << "\n";
             cout << "Registration successful! Please save your ID and login again to continue.\n";
 
-            rebuildGlobalArray(myBank);
-            bstLoadFromList(myBank);
-            saveToFile(myBank, "bank_data.csv");
-
-            cout << "\nPress enter to continue...";
-            cin.ignore();
-            cin.get();
-            break;
+                // Keep globals and BST in sync
+                rebuildGlobalArray(myBank);
+                bstLoadFromList(myBank);
+                hashLoadFromList(myBank);
+            }
         }
-        case 3:
-            saveToFile(myBank, "bank_data.csv");
-            cout << "Bye!\n";
-            exit(0);
-        default:
-            cout << "Invalid option, try again\n";
-        }
-
-    } while (choice != 3);
-}
-
-void page2(){
-    int choice;
-
-    do{
-        clearConsole();
-        cout << "Welcome " << loggedInID << "\n";
-        cout << "1. Add transaction\n";
-        cout << "2. Delete account\n";
-        cout << "3. Update account\n";
-        cout << "4. Search account\n";
-        cout << "5. Display all accounts\n";
-        cout << "6. Sorting / Reports\n";
-        cout << "7. BST Account Search\n";
-        cout << "8. Action History (Stack)\n";
-        cout << "9. Customer Queue\n";
-        cout << "10. Logout\n";
-        cout << "Input your option: ";
-        cin >> choice;
-
-        switch (choice){
-        case 1:
+        else if (choice == 3)
         {
-            int type;
-            string toAcc;
-            double amount;
+            if (!isLoggedIn)
+            {
+                cout << "You need to login first!\n";
+            }
+            else
+            {
+                int type;
+                string toAcc;
+                double amount;
 
             cout << "Select transaction type:\n";
             cout << "1. Deposit\n";
@@ -182,29 +179,49 @@ void page2(){
             int confirm;
             cin >> confirm;
 
-            if (confirm == 1){
-                bstDelete(loggedInID); 
-                deleteAcc(myBank, loggedInID);
-                isLoggedIn = false;
-                loggedInID = "";
-                cout << "Account deleted!\n";
-                rebuildGlobalArray(myBank);
-                return;
+                if (confirm == 1)
+                {
+                    bstDelete(loggedInID); // remove from BST first
+                    deleteAcc(myBank, loggedInID);
+                    isLoggedIn = false;
+                    loggedInID = "";
+                    cout << "Account deleted!\n";
+                    rebuildGlobalArray(myBank);
+                    hashLoadFromList(myBank);
+                }
+                else
+                {
+                    cout << "Cancelled\n";
+                }
             }
-            else{
-                cout << "Cancelled\n";
-            }
-            break;
         }
-        case 3:
-            updateAcc(myBank, loggedInID);
-            rebuildGlobalArray(myBank);
-            bstLoadFromList(myBank); 
-            break;
-        case 4:
-            searchAcc(myBank, loggedInID);
-            break;
-        case 5:
+        else if (choice == 5)
+        {
+            if (!isLoggedIn)
+            {
+                cout << "You need to login first!\n";
+            }
+            else
+            {
+                updateAcc(myBank, loggedInID);
+                rebuildGlobalArray(myBank);
+                bstLoadFromList(myBank); // reload BST after update
+                hashLoadFromList(myBank);
+            }
+        }
+        else if (choice == 6)
+        {
+            if (!isLoggedIn)
+            {
+                cout << "You need to login first!\n";
+            }
+            else
+            {
+                searchAcc(myBank, loggedInID);
+            }
+        }
+        else if (choice == 7)
+        {
             display(myBank);
             break;
         case 6:
@@ -218,32 +235,21 @@ void page2(){
             break;
         case 9:
             queueMenu();
-            break;
-        case 10:
-            isLoggedIn = false;
-            loggedInID = "";
-            cout << "Logged out!\n";
-            return;
-        default:
+        }
+        else if (choice == 13)
+        {
+            hashTableMenu();
+        }
+        else if (choice == 14)
+        {
+            saveToFile(myBank, "bank_data.csv");
+            cout << "Bye!\n";
+        }
+        else
+        {
             cout << "Invalid option, try again\n";
         }
-
-        cout << "\nPress enter to continue...";
-        cin.ignore();
-        cin.get();
-
-    } while (choice != 10);
-}
-
-int main()
-{
-    myBank = createList();
-    loadFromFile(myBank, "bank_data.csv");
-
-    rebuildGlobalArray(myBank);
-    bstLoadFromList(myBank);
-
-    mainMenu();
+    } while (choice != 14);
 
     return 0;
 }

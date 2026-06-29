@@ -1,19 +1,19 @@
 #pragma once
 #include <iostream>
-#include "Account.h"
+#include "account.h"
 using namespace std;
 
 const int TABLE_SIZE = 10;
 
-struct Element {
+struct HashNode {
     Account data;
-    Element* next;
+    HashNode* next;
 };
 
 struct Bucket {
     int n;            
-    Element* head;
-    Element* tail;
+    HashNode* head;
+    HashNode* tail;
 };
 
 Bucket* hashTable[TABLE_SIZE]; 
@@ -30,6 +30,7 @@ int hashFunction(string value) {
 
 Bucket* createEmptyBucket() {
     Bucket* b = new Bucket;
+    b->n = 0;  
     b -> head = nullptr; 
     b -> tail = nullptr;
     return b;
@@ -43,7 +44,7 @@ void initHashTable() {
 
 // help append the new data to the previous 
 void addToBucket(Bucket* b, Account a) {
-    Element* e = new Element;
+    HashNode* e = new HashNode;
     e->data = a;
     e->next = nullptr;
 
@@ -62,23 +63,24 @@ bool hashInsert(Account a) {
     int index = hashFunction (a.accID);
 
     // Check for duplicated accID first
-    Element* e = hashTable[index] -> head;
+    HashNode* e = hashTable[index] -> head;
     while (e != nullptr) {
         if (e -> data.accID == a.accID) {
             cout << "Insert Failed: Account ID " << a.accID << " already exists." << endl;
-            return;
+            return false;
         }
         e = e -> next;
     }
     
     addToBucket(hashTable[index], a);
     cout << "Account " << a.accID << " inserted at bucket " << index << endl;
+    return true; 
 }
 
 bool hashSearch(string value) {
     int index = hashFunction(value);
     if (hashTable[index] -> n != 0) {
-        Element* e = hashTable[index] -> head;
+        HashNode* e = hashTable[index] -> head;
         while (e != nullptr) {
             if (e -> data.accID == value) {
                 cout << value << " is contained in position " << index << endl;
@@ -97,8 +99,8 @@ bool hashSearch(string value) {
 bool hashDelete(string value) {
     int index = hashFunction(value);
     if (hashTable[index] -> n != 0) {
-        Element* e = hashTable[index] -> head;
-        Element* prev = nullptr;
+        HashNode* e = hashTable[index] -> head;
+        HashNode* prev = nullptr;
 
         while (e != nullptr) {
             if (e -> data.accID == value) {
@@ -132,7 +134,7 @@ void hashDisplay() {
     for (int i = 0; i < TABLE_SIZE; i++) {
         cout << i << "\t--> ";
         if (hashTable[i] -> n != 0) {
-            Element* e = hashTable[i] -> head;
+            HashNode* e = hashTable[i] -> head;
             while (e != nullptr) {
                 cout << "[" << e -> data.accID << " " << e -> data.accName
                      << " $" << e -> data.balance << "]";
@@ -147,9 +149,9 @@ void hashDisplay() {
 
 void hashLoadFromList (List* ls) {
     for (int i = 0; i < TABLE_SIZE; i++) {
-        Element* e = hashTable[i] -> head;
+        HashNode* e = hashTable[i] -> head;
         while (e != nullptr) {
-            Element* next = e -> next;
+            HashNode* next = e -> next;
             delete e;
             e = next;
         }
