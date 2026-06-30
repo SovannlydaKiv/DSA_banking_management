@@ -3,10 +3,10 @@
 #include "Sorting.h"
 #include "Stack.h"
 #include "Queue.h"
+#include "HashTable.h"
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include "HashTable.h"
 using namespace std;
 
 #define MAX_ACCOUNTS 1000
@@ -18,7 +18,7 @@ bool isLoggedIn = false;
 string loggedInID = "";
 
 void mainMenu();
-void page2();
+void page2(); 
 void clearConsole();
 
 void clearConsole(){
@@ -54,13 +54,10 @@ string generateID(List *ls)
 int main()
 {
     List *myBank = createList();
-    loadFromFile(myBank, "bank_data.csv");
+    loadFromFile(myBank, "bank_data.csv"); 
 
-    // Sync globals and BST from loaded data
     rebuildGlobalArray(myBank);
-    bstLoadFromList(myBank);
-    initHashTable();          // ADDED
-    hashLoadFromList(myBank);
+    initHashTable();          
 
     int choice;
     bool isLoggedIn = false;
@@ -87,8 +84,7 @@ int main()
         cout << "Input your option: ";
         cin >> choice;
 
-        switch (choice){
-        case 1:
+        if (choice == 1)
         {
             string id, password;
             cout << "Enter account ID: ";
@@ -98,21 +94,14 @@ int main()
             loggedInID = login(myBank, id, password);
             if (loggedInID != ""){
                 isLoggedIn = true;
-                page2();
-                return;
             }
-            cout << "\nPress enter to continue...";
-            cin.ignore();
-            cin.get();
-            break;
         }
-        case 2:
+        else if (choice == 2)
         {
             string name, password;
             double balance;
 
             cout << "===== Register New Account =====\n";
-
             string id = generateID(myBank);
 
             cin.ignore();
@@ -129,11 +118,7 @@ int main()
             cout << "Your new account ID is: " << id << "\n";
             cout << "Registration successful! Please save your ID and login again to continue.\n";
 
-                // Keep globals and BST in sync
-                rebuildGlobalArray(myBank);
-                bstLoadFromList(myBank);
-                hashLoadFromList(myBank);
-            }
+            rebuildGlobalArray(myBank);
         }
         else if (choice == 3)
         {
@@ -147,47 +132,41 @@ int main()
                 string toAcc;
                 double amount;
 
-            cout << "Select transaction type:\n";
-            cout << "1. Deposit\n";
-            cout << "2. Withdraw\n";
-            cout << "3. Transfer\n";
-            cin >> type;
+                cout << "Select transaction type:\n";
+                cout << "1. Deposit\n";
+                cout << "2. Withdraw\n";
+                cout << "3. Transfer\n";
+                cin >> type;
 
-            cout << "Enter amount: ";
-            cin >> amount;
+                cout << "Enter amount: ";
+                cin >> amount;
 
-            cout << "Enter destination account ID: ";
-            cin >> toAcc;
+                cout << "Enter destination account ID: ";
+                cin >> toAcc;
 
-            addTrans(myBank, loggedInID, toAcc, type, amount);
-            cout << "Transaction done!\n";
+                addTrans(myBank, loggedInID, toAcc, type, amount);
+                cout << "Transaction done!\n";
 
-            Transaction t;
-            t.transID = myBank->transCounter;
-            t.fromAcc = loggedInID;
-            t.toAcc = toAcc;
-            t.type = type;
-            t.amount = amount;
-            pushAction(t);
-
-            rebuildGlobalArray(myBank);
-            break;
+                rebuildGlobalArray(myBank);
+            }
         }
-        case 2:
+        else if (choice == 4)
         {
-            cout << "Are you sure you want to delete? (1 = Yes, 2 = No): ";
-            int confirm;
-            cin >> confirm;
+            if (!isLoggedIn){
+                cout << "You need to login first!\n";
+            }
+            else {
+                cout << "Are you sure you want to delete? (1 = Yes, 2 = No): ";
+                int confirm;
+                cin >> confirm;
 
                 if (confirm == 1)
                 {
-                    bstDelete(loggedInID); // remove from BST first
                     deleteAcc(myBank, loggedInID);
                     isLoggedIn = false;
                     loggedInID = "";
                     cout << "Account deleted!\n";
                     rebuildGlobalArray(myBank);
-                    hashLoadFromList(myBank);
                 }
                 else
                 {
@@ -205,8 +184,6 @@ int main()
             {
                 updateAcc(myBank, loggedInID);
                 rebuildGlobalArray(myBank);
-                bstLoadFromList(myBank); // reload BST after update
-                hashLoadFromList(myBank);
             }
         }
         else if (choice == 6)
@@ -223,22 +200,36 @@ int main()
         else if (choice == 7)
         {
             display(myBank);
-            break;
-        case 6:
-            sortingMenu();
-            break;
-        case 7:
-            bstMenu();
-            break;
-        case 8:
-            stackMenu();
-            break;
-        case 9:
-            queueMenu();
+        }
+        else if (choice == 8)
+        {
+            if (!isLoggedIn) {
+                cout << "You are not logged in!\n";
+            } else {
+                isLoggedIn = false;
+                loggedInID = "";
+                cout << "Logged out successfully!\n";
+            }
+        }
+        else if (choice == 9)
+        {
+            sortingMenu(); 
+        }
+        else if (choice == 10)
+        {
+            bstMenu(); 
+        }
+        else if (choice == 11)
+        {
+            cout << "Stack Menu Triggered\n";
+        }
+        else if (choice == 12)
+        {
+            queueMenu(); 
         }
         else if (choice == 13)
         {
-            hashTableMenu();
+            hashTableMenu(); 
         }
         else if (choice == 14)
         {
