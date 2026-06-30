@@ -17,11 +17,13 @@ List* myBank;
 bool isLoggedIn = false;
 string loggedInID = "";
 
-void mainMenu();
-void page2(); 
 void clearConsole();
+void rebuildGlobalArray(List *ls);
+string generateID(List *ls);
+void operationsMenu(List* myBank);
 
-void clearConsole(){
+void clearConsole()
+{
     #if defined(_WIN32) || defined(_WIN64)
         system("cls");
     #else
@@ -51,6 +53,110 @@ string generateID(List *ls)
     return newID;
 }
 
+void operationsMenu(List* myBank)
+{
+    int choice;
+    do
+    {
+        clearConsole();
+        cout << "\n==== Operations Menu ====\n";
+        cout << "Logged in as: " << loggedInID << "\n\n";
+        
+        cout << "1.  Add transaction\n";
+        cout << "2.  Delete account\n";
+        cout << "3.  Update account\n";
+        cout << "4.  Search account\n";
+        cout << "5.  Display all accounts\n";
+        cout << "6.  Sorting / Reports\n";
+        cout << "7.  BST Account Search\n";
+        cout << "8.  Action History (Stack)\n";
+        cout << "9.  Customer Queue\n";
+        cout << "10. Hash Table Lookup\n";
+        cout << "11. Logout (Return to Main Menu)\n";
+        cout << "Input your option: ";
+        cin >> choice;
+
+        switch (choice)
+        {
+            case 1:
+            {
+                int type;
+                string toAcc;
+                double amount;
+                cout << "Select transaction type:\n1. Deposit\n2. Withdraw\n3. Transfer\n";
+                cin >> type;
+                cout << "Enter amount: ";
+                cin >> amount;
+                cout << "Enter destination account ID: ";
+                cin >> toAcc;
+
+                addTrans(myBank, loggedInID, toAcc, type, amount);
+                cout << "Transaction done!\n";
+                rebuildGlobalArray(myBank);
+                break;
+            }
+            case 2:
+            {
+                cout << "Are you sure you want to delete? (1 = Yes, 2 = No): ";
+                int confirm;
+                cin >> confirm;
+                if (confirm == 1) {
+                    deleteAcc(myBank, loggedInID);
+                    isLoggedIn = false;
+                    loggedInID = "";
+                    cout << "Account deleted! You will be logged out.\n";
+                    rebuildGlobalArray(myBank);
+                    choice = 11; // Force the loop to exit back to main menu
+                } else {
+                    cout << "Cancelled\n";
+                }
+                break;
+            }
+            case 3:
+                updateAcc(myBank, loggedInID);
+                rebuildGlobalArray(myBank);
+                break;
+            case 4:
+                searchAcc(myBank, loggedInID);
+                break;
+            case 5:
+                display(myBank);
+                break;
+            case 6:
+                sortingMenu(); 
+                break;
+            case 7:
+                bstMenu(); 
+                break;
+            case 8:
+                cout << "Stack Menu Triggered\n";
+                break;
+            case 9:
+                queueMenu(); 
+                break;
+            case 10:
+                hashTableMenu(); 
+                break;
+            case 11:
+                isLoggedIn = false;
+                loggedInID = "";
+                cout << "Logged out successfully!\n";
+                break;
+            default:
+                cout << "Invalid option, try again\n";
+                break;
+        }
+
+        if (choice != 11) 
+        {
+            cout << "\nPress Enter to continue...";
+            cin.ignore(10000, '\n');
+            cin.get();
+        }
+
+    } while (choice != 11 && isLoggedIn); 
+}
+
 int main()
 {
     List *myBank = createList();
@@ -60,187 +166,91 @@ int main()
     initHashTable();          
 
     int choice;
-    bool isLoggedIn = false;
-    string loggedInID = "";
 
     do
     {
+        clearConsole();
         cout << "\n==== Welcome to BDSM (Banking Data System Management) ====\n";
-        cout << "Please pick one of our services:\n\n";
-        cout << "1.  Login\n";
-        cout << "2.  Register / Add an account\n";
-        cout << "3.  Add transaction\n";
-        cout << "4.  Delete account\n";
-        cout << "5.  Update account\n";
-        cout << "6.  Search account\n";
-        cout << "7.  Display all\n";
-        cout << "8.  Logout\n";
-        cout << "9.  Sorting / Reports\n";
-        cout << "10. BST Account Search\n";
-        cout << "11. Action History (Stack)\n";
-        cout << "12. Customer Queue\n";
-        cout << "13. Hash Table Lookup\n";
-        cout << "14. Exit\n";
+        cout << "1. Login\n";
+        cout << "2. Register / Add an account\n";
+        cout << "3. Exit\n";
         cout << "Input your option: ";
         cin >> choice;
 
-        if (choice == 1)
+        switch (choice)
         {
-            string id, password;
-            cout << "Enter account ID: ";
-            cin >> id;
-            cout << "Enter password: ";
-            password = getPassword();
-            loggedInID = login(myBank, id, password);
-            if (loggedInID != ""){
-                isLoggedIn = true;
-            }
-        }
-        else if (choice == 2)
-        {
-            string name, password;
-            double balance;
-
-            cout << "===== Register New Account =====\n";
-            string id = generateID(myBank);
-
-            cin.ignore();
-            cout << "Enter Full Name: ";
-            getline(cin, name);
-
-            cout << "Enter Password: ";
-            password = getPassword();
-
-            cout << "Enter Initial Balance: ";
-            cin >> balance;
-
-            addAcc(myBank, id, name, password, balance);
-            cout << "Your new account ID is: " << id << "\n";
-            cout << "Registration successful! Please save your ID and login again to continue.\n";
-
-            rebuildGlobalArray(myBank);
-        }
-        else if (choice == 3)
-        {
-            if (!isLoggedIn)
+            case 1:
             {
-                cout << "You need to login first!\n";
-            }
-            else
-            {
-                int type;
-                string toAcc;
-                double amount;
-
-                cout << "Select transaction type:\n";
-                cout << "1. Deposit\n";
-                cout << "2. Withdraw\n";
-                cout << "3. Transfer\n";
-                cin >> type;
-
-                cout << "Enter amount: ";
-                cin >> amount;
-
-                cout << "Enter destination account ID: ";
-                cin >> toAcc;
-
-                addTrans(myBank, loggedInID, toAcc, type, amount);
-                cout << "Transaction done!\n";
-
-                rebuildGlobalArray(myBank);
-            }
-        }
-        else if (choice == 4)
-        {
-            if (!isLoggedIn){
-                cout << "You need to login first!\n";
-            }
-            else {
-                cout << "Are you sure you want to delete? (1 = Yes, 2 = No): ";
-                int confirm;
-                cin >> confirm;
-
-                if (confirm == 1)
+                string id, password;
+                cout << "Enter account ID: ";
+                cin >> id;
+                cout << "Enter password: ";
+                password = getPassword();
+                
+                loggedInID = login(myBank, id, password);
+                
+                if (loggedInID != "") 
                 {
-                    deleteAcc(myBank, loggedInID);
-                    isLoggedIn = false;
-                    loggedInID = "";
-                    cout << "Account deleted!\n";
-                    rebuildGlobalArray(myBank);
-                }
-                else
+                    isLoggedIn = true;
+                    cout << "Login successful!\n";
+                    cout << "\nPress Enter to enter your account...";
+                    cin.ignore(10000, '\n');
+                    cin.get();
+                    
+                    // Proceed to Page 2
+                    operationsMenu(myBank); 
+                } 
+                else 
                 {
-                    cout << "Cancelled\n";
+                    cout << "Login failed. Please check your ID and Password.\n";
+                    cout << "\nPress Enter to try again...";
+                    cin.ignore(10000, '\n');
+                    cin.get();
                 }
+                break;
             }
-        }
-        else if (choice == 5)
-        {
-            if (!isLoggedIn)
+            case 2:
             {
-                cout << "You need to login first!\n";
-            }
-            else
-            {
-                updateAcc(myBank, loggedInID);
+                string name, password;
+                double balance;
+
+                cout << "===== Register New Account =====\n";
+                string id = generateID(myBank);
+
+                cin.ignore();
+                cout << "Enter Full Name: ";
+                getline(cin, name);
+                cout << "Enter Password: ";
+                password = getPassword();
+                cout << "Enter Initial Balance: ";
+                cin >> balance;
+
+                addAcc(myBank, id, name, password, balance);
+                cout << "Your new account ID is: " << id << "\n";
+                cout << "Registration successful! Please save your ID and login to continue.\n";
                 rebuildGlobalArray(myBank);
+                
+                cout << "\nPress Enter to return to main menu...";
+                cin.ignore(10000, '\n');
+                cin.get();
+                break;
             }
-        }
-        else if (choice == 6)
-        {
-            if (!isLoggedIn)
+            case 3:
             {
-                cout << "You need to login first!\n";
+                saveToFile(myBank, "bank_data.csv");
+                cout << "Bye!\n";
+                break;
             }
-            else
+            default:
             {
-                searchAcc(myBank, loggedInID);
+                cout << "Invalid option, try again\n";
+                cout << "\nPress Enter to continue...";
+                cin.ignore(10000, '\n');
+                cin.get();
+                break;
             }
         }
-        else if (choice == 7)
-        {
-            display(myBank);
-        }
-        else if (choice == 8)
-        {
-            if (!isLoggedIn) {
-                cout << "You are not logged in!\n";
-            } else {
-                isLoggedIn = false;
-                loggedInID = "";
-                cout << "Logged out successfully!\n";
-            }
-        }
-        else if (choice == 9)
-        {
-            sortingMenu(); 
-        }
-        else if (choice == 10)
-        {
-            bstMenu(); 
-        }
-        else if (choice == 11)
-        {
-            cout << "Stack Menu Triggered\n";
-        }
-        else if (choice == 12)
-        {
-            queueMenu(); 
-        }
-        else if (choice == 13)
-        {
-            hashTableMenu(); 
-        }
-        else if (choice == 14)
-        {
-            saveToFile(myBank, "bank_data.csv");
-            cout << "Bye!\n";
-        }
-        else
-        {
-            cout << "Invalid option, try again\n";
-        }
-    } while (choice != 14);
+    } while (choice != 3);
 
     return 0;
 }
