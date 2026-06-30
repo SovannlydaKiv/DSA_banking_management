@@ -12,5 +12,5 @@ void bstInsert(Account a);
 BSTNode *bstSearch(string id);
 void bstInOrderDisplay();
 void bstDelete(string id);
-void bstMenu();
+void bstMenu(List *ls);
 void bstLoadFromList(List *ls);

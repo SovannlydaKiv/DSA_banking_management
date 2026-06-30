@@ -2,3 +2,6 @@ account BD-9194 Kiv_Sovannlyda 9426 200
 account BD-1749 Hen_Chhordavattey 8958 100
 account BD-7609 Chiv_Inthera 9758 40
 account BD-2552 Sao_DaliInaco 284 100
+account BD-2100 chhay_bao 7279 800
+transaction 1 BD-2100 BD-2100 1 200
+transaction 3 BD-2100 BD-2100 1 200

@@ -13,7 +13,7 @@ void MergeBalance(Account arr[], int lb, int mid, int ub)
     int i = lb;
     int j = mid + 1;
     int k = 0;
-    int n = ub - mid + 1;
+    int n = ub - lb + 1;
     Account *b = new Account[n];
 
     while (i <= mid && j <= ub)
@@ -28,7 +28,7 @@ void MergeBalance(Account arr[], int lb, int mid, int ub)
         }
     }
 
-    while (j <= mid)
+    while (i <= mid)
     {
         b[k++] = arr[i++];
     }
@@ -62,7 +62,7 @@ void MergeID(Account arr[], int lb, int mid, int ub)
     int i = lb;
     int j = mid + 1;
     int k = 0;
-    int n = lb - mid + 1;
+    int n = ub - lb + 1;
     Account *b = new Account[n];
 
     while (i <= mid && j <= ub)
@@ -101,7 +101,7 @@ void MergeSortID(Account arr[], int lb, int ub)
         int mid = (lb + ub) / 2;
         MergeSortID(arr, lb, mid);
         MergeSortID(arr, mid + 1, ub);
-        MergeID(arr, lb, ub, mid);
+        MergeID(arr, lb, mid, ub);
     }
 }
 
@@ -150,7 +150,7 @@ void MergeSortName(Account arr[], int lb, int ub)
         int mid = (lb + ub) / 2;
         MergeSortName(arr, lb, mid);
         MergeSortName(arr, mid + 1, ub);
-        MergeName(arr, lb, ub, mid);
+        MergeName(arr, lb, mid, ub);
     }
 }
 
@@ -172,11 +172,11 @@ void printAccounts(Account arr[], int n, bool ascending)
     }
     else
     {
-        for (int i = n - 1; i >= 0; i++)
+        for (int i = n - 1; i >= 0; i--)
         {
             cout << "  " << arr[i].accID
                  << "\t" << arr[i].accName
-                 << "\t\t" << arr[i].balance;
+                 << "\t\t" << arr[i].balance << "\n";
         }
     }
 }

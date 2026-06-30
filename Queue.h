@@ -1,9 +1,10 @@
 #pragma once
-#include "Account.h"
+#include "account.h"
+#include <string>
 
 struct Element
 {
-    int data;
+    string data;
     Element *next;
 };
 
@@ -16,14 +17,14 @@ struct Queue
 
 Queue* createQueue();
 bool isEmpty(Queue* q);
-void enqueue (Queue* q, int data);
-int dequeue (Queue* q);
-int front(Queue* q);
-int rear (Queue* q);
+void enqueue (Queue* q, string data);
+string dequeue (Queue* q);
+string front(Queue* q);
+string rear (Queue* q);
 int getSize (Queue* q);
 void display (Queue* q);
 
-void queueMenu();
-void enqueueCustomer(int accountID);
+void queueMenu(List* ls);
+void enqueueCustomer(string accountID);
 void dequeueCustomer();
 void displayQueue();

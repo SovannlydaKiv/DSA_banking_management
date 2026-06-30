@@ -87,12 +87,20 @@ void operationsMenu(List* myBank)
                 cin >> type;
                 cout << "Enter amount: ";
                 cin >> amount;
-                cout << "Enter destination account ID: ";
-                cin >> toAcc;
+                if (type == 3) {
+                    cout << "Enter destination account ID: ";
+                    cin >> toAcc;
+                } else {
+                    toAcc = loggedInID;
+                }
 
-                addTrans(myBank, loggedInID, toAcc, type, amount);
-                cout << "Transaction done!\n";
-                rebuildGlobalArray(myBank);
+                if (addTrans(myBank, loggedInID, toAcc, type, amount)) {
+                    cout << "Transaction done!\n";
+                    pushAction(myBank->tail->transData);
+                    rebuildGlobalArray(myBank);
+                } else {
+                    cout << "Transaction failed!\n";
+                }
                 break;
             }
             case 2:
@@ -126,13 +134,14 @@ void operationsMenu(List* myBank)
                 sortingMenu(); 
                 break;
             case 7:
-                bstMenu(); 
+                bstMenu(myBank); 
                 break;
             case 8:
-                cout << "Stack Menu Triggered\n";
+                stackMenu(myBank);
+                rebuildGlobalArray(myBank);
                 break;
             case 9:
-                queueMenu(); 
+                queueMenu(myBank); 
                 break;
             case 10:
                 hashTableMenu(); 
@@ -159,11 +168,13 @@ void operationsMenu(List* myBank)
 
 int main()
 {
-    List *myBank = createList();
+    myBank = createList();
     loadFromFile(myBank, "bank_data.csv"); 
 
     rebuildGlobalArray(myBank);
-    initHashTable();          
+    initHashTable(); 
+    hashLoadFromList(myBank);         
+    loadStackFromList(myBank);
 
     int choice;
 
@@ -229,6 +240,7 @@ int main()
                 cout << "Your new account ID is: " << id << "\n";
                 cout << "Registration successful! Please save your ID and login to continue.\n";
                 rebuildGlobalArray(myBank);
+                hashLoadFromList(myBank);
                 
                 cout << "\nPress Enter to return to main menu...";
                 cin.ignore(10000, '\n');

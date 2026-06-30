@@ -1,5 +1,5 @@
 #pragma once
-#include "Account.h"
+#include "account.h"
 
 struct StackNode
 {
@@ -20,7 +20,8 @@ Transaction pop(Stack *s);
 Transaction peek(Stack *s);
 void display(Stack *s);
 
-void stackMenu();
+void stackMenu(List* ls);
 void pushAction(Transaction t);
-void undoLastAction();
+void undoLastAction(List* ls);
 void viewActionHistory();
+void loadStackFromList(List* ls);

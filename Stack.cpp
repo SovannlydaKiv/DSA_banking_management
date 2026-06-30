@@ -74,7 +74,7 @@ void pushAction(Transaction t)
     cout << endl;
 }
 
-void undoLastAction()
+void undoLastAction(List* ls)
 {
     if (isEmpty(actionHistory))
     {
@@ -82,6 +82,63 @@ void undoLastAction()
         return;
     }
     Transaction last = pop(actionHistory);
+
+    // Reverse balance changes in the list
+    Node* fromNode = nullptr;
+    Node* toNode = nullptr;
+    Node* cur = ls->head;
+    while (cur != nullptr) {
+        if (cur->type == 0) {
+            if (cur->data.accID == last.fromAcc) {
+                fromNode = cur;
+            }
+            if (cur->data.accID == last.toAcc) {
+                toNode = cur;
+            }
+        }
+        cur = cur->next;
+    }
+
+    if (last.type == 1) { // Undo Deposit
+        if (fromNode != nullptr) {
+            fromNode->data.balance -= last.amount;
+        }
+    }
+    else if (last.type == 2) { // Undo Withdraw
+        if (fromNode != nullptr) {
+            fromNode->data.balance += last.amount;
+        }
+    }
+    else if (last.type == 3) { // Undo Transfer
+        if (fromNode != nullptr) {
+            fromNode->data.balance += last.amount;
+        }
+        if (toNode != nullptr) {
+            toNode->data.balance -= last.amount;
+        }
+    }
+
+    // Remove the transaction node from the linked list `ls`
+    Node* prev = nullptr;
+    cur = ls->head;
+    while (cur != nullptr) {
+        if (cur->type == 1 && cur->transData.transID == last.transID) {
+            if (prev == nullptr) {
+                ls->head = cur->next;
+            } else {
+                prev->next = cur->next;
+            }
+            if (cur == ls->tail) {
+                ls->tail = prev;
+            }
+            delete cur;
+            ls->n--;
+            break;
+        }
+        prev = cur;
+        cur = cur->next;
+    }
+
     cout << "  Undid: ";
     printTrans(last);
     cout << endl;
@@ -106,12 +163,12 @@ void viewActionHistory()
     }
 }
 
-void stackMenu()
+void stackMenu(List* ls)
 {
     int choice;
     do
     {
-        cout << "\n--- Stack Menu (action history) ---\n"; // remove the "record action", repetitive, already exist in main (option 3)
+        cout << "\n--- Stack Menu (action history) ---\n";
         cout << "1. Undo last action\n";
         cout << "2. View history\n";
         cout << "0. Back\n";
@@ -119,11 +176,28 @@ void stackMenu()
         cin >> choice;
         if (choice == 1)
         {
-            undoLastAction();
+            undoLastAction(ls);
         }
         else if (choice == 2)
         {
             viewActionHistory();
         }
     } while (choice != 0);
+}
+
+void loadStackFromList(List* ls)
+{
+    while (!isEmpty(actionHistory))
+    {
+        pop(actionHistory);
+    }
+    Node* cur = ls->head;
+    while (cur != nullptr)
+    {
+        if (cur->type == 1)
+        {
+            push(actionHistory, cur->transData);
+        }
+        cur = cur->next;
+    }
 }

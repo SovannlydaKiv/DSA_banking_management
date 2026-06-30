@@ -59,7 +59,54 @@ void addAcc(List* ls, string id, string name, string password, double bal){
     ls -> n++;
 }
 
-void addTrans(List* ls, string fromAcc, string toAcc, int type, double amount){
+bool addTrans(List* ls, string fromAcc, string toAcc, int type, double amount){
+    Node* fromNode = nullptr;
+    Node* toNode = nullptr;
+    Node* cur = ls->head;
+    while (cur != nullptr) {
+        if (cur->type == 0) {
+            if (cur->data.accID == fromAcc) {
+                fromNode = cur;
+            }
+            if (cur->data.accID == toAcc) {
+                toNode = cur;
+            }
+        }
+        cur = cur->next;
+    }
+
+    if (fromNode == nullptr) {
+        cout << "Source account not found!" << endl;
+        return false;
+    }
+
+    if (type == 1) { // Deposit
+        fromNode->data.balance += amount;
+    }
+    else if (type == 2) { // Withdraw
+        if (fromNode->data.balance < amount) {
+            cout << "Insufficient balance!" << endl;
+            return false;
+        }
+        fromNode->data.balance -= amount;
+    }
+    else if (type == 3) { // Transfer
+        if (toNode == nullptr) {
+            cout << "Destination account not found!" << endl;
+            return false;
+        }
+        if (fromNode->data.balance < amount) {
+            cout << "Insufficient balance!" << endl;
+            return false;
+        }
+        fromNode->data.balance -= amount;
+        toNode->data.balance += amount;
+    }
+    else {
+        cout << "Invalid transaction type!" << endl;
+        return false;
+    }
+
     Node* newNode = new Node();
     newNode -> transData.transID = ls -> transCounter + 1;
     newNode -> transData.fromAcc = fromAcc;
@@ -78,6 +125,7 @@ void addTrans(List* ls, string fromAcc, string toAcc, int type, double amount){
     ls -> tail = newNode;
     ls -> n++;
     ls -> transCounter++;
+    return true;
 }
 
 void deleteAcc(List* ls, string id){

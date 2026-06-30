@@ -189,8 +189,9 @@ void bstLoadFromList(List *ls)
 }
 
 // BST Menu
-void bstMenu()
+void bstMenu(List *ls)
 {
+    bstLoadFromList(ls);
     int choice;
     do
     {
@@ -217,7 +218,8 @@ void bstMenu()
             cin >> a.password;
             cout << "  Balance   : ";
             cin >> a.balance;
-            bstInsert(a);
+            addAcc(ls, a.accID, a.accName, a.password, a.balance);
+            bstLoadFromList(ls);
             break;
         }
 
@@ -241,7 +243,8 @@ void bstMenu()
             string id;
             cout << "  Enter Account ID to delete: ";
             cin >> id;
-            bstDelete(id);
+            deleteAcc(ls, id);
+            bstLoadFromList(ls);
             break;
         }
 

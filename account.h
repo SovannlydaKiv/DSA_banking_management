@@ -35,7 +35,7 @@ struct List{
 List* createList();
 
 void addAcc(List* ls, string id, string name, string password, double bal);
-void addTrans(List* ls, string fromAcc, string toAcc, int type, double amount);
+bool addTrans(List* ls, string fromAcc, string toAcc, int type, double amount);
 void deleteAcc(List* ls, string id);
 void updateAcc(List* ls, string id);
 void searchAcc(List* ls, string id);
