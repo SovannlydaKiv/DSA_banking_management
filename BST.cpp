@@ -4,7 +4,6 @@ using namespace std;
 
 static BSTNode *bstRoot = nullptr;
 
-// Insert
 static BSTNode *insert(BSTNode *node, Account a)
 {
     if (node == nullptr)
@@ -100,23 +99,18 @@ static BSTNode *deleteNode(BSTNode *node, string id)
         node->right = deleteNode(node->right, id);
     }
     else
-    { // find no node to delete
-        // Case 1: NO CHILD
+    {
         if (node->left == nullptr && node->right == nullptr)
         {
             delete node;
             return nullptr;
         }
-
-        // Case 2: TWO CHILD
         else if (node->left != nullptr && node->right != nullptr)
         {
             BSTNode *succ = findMin(node->right);
             node->data = succ->data;
             node->right = deleteNode(node->right, succ->data.accID);
         }
-
-        // Case 3: ONE CHILD
         else
         {
             BSTNode *child = (node->left) ? node->left : node->right;
@@ -206,59 +200,59 @@ void bstMenu(List *ls)
 
         switch (choice)
         {
-        case 1:
-        {
-            Account a;
-            cout << "  Account ID: ";
-            cin >> a.accID;
-            cout << "  Name      : ";
-            cin.ignore();
-            getline(cin, a.accName);
-            cout << "  Password  : ";
-            cin >> a.password;
-            cout << "  Balance   : ";
-            cin >> a.balance;
-            addAcc(ls, a.accID, a.accName, a.password, a.balance);
-            bstLoadFromList(ls);
-            break;
-        }
+            case 1:
+            {
+                Account a;
+                cout << "  Account ID: ";
+                cin >> a.accID;
+                cout << "  Name      : ";
+                cin.ignore();
+                getline(cin, a.accName);
+                cout << "  Password  : ";
+                cin >> a.password;
+                cout << "  Balance   : ";
+                cin >> a.balance;
+                addAcc(ls, a.accID, a.accName, a.password, a.balance);
+                bstLoadFromList(ls);
+                break;
+            }
 
-        case 2:
-        {
-            string id;
-            cout << "  Enter Account ID to search: ";
-            cin >> id;
-            bstSearch(id);
-            break;
-        }
+            case 2:
+            {
+                string id;
+                cout << "  Enter Account ID to search: ";
+                cin >> id;
+                bstSearch(id);
+                break;
+            }
 
-        case 3:
-        {
-            bstInOrderDisplay();
-            break;
-        }
+            case 3:
+            {
+                bstInOrderDisplay();
+                break;
+            }
 
-        case 4:
-        {
-            string id;
-            cout << "  Enter Account ID to delete: ";
-            cin >> id;
-            deleteAcc(ls, id);
-            bstLoadFromList(ls);
-            break;
-        }
+            case 4:
+            {
+                string id;
+                cout << "  Enter Account ID to delete: ";
+                cin >> id;
+                deleteAcc(ls, id);
+                bstLoadFromList(ls);
+                break;
+            }
 
-        case 0:
-        {
-            cout << "  Returning...\n";
-            break;
-        }
+            case 0:
+            {
+                cout << "  Returning...\n";
+                break;
+            }
 
-        default:
-        {
-            cout << "  Invalid choice. Try Again.\n";
-            break;
-        }
+            default:
+            {
+                cout << "  Invalid choice. Try Again.\n";
+                break;
+            }
         }
     } while (choice != 0);
 }

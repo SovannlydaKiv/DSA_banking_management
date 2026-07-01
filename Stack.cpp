@@ -83,7 +83,6 @@ void undoLastAction(List* ls)
     }
     Transaction last = pop(actionHistory);
 
-    // Reverse balance changes in the list
     Node* fromNode = nullptr;
     Node* toNode = nullptr;
     Node* cur = ls->head;
@@ -99,17 +98,17 @@ void undoLastAction(List* ls)
         cur = cur->next;
     }
 
-    if (last.type == 1) { // Undo Deposit
+    if (last.type == 1) { 
         if (fromNode != nullptr) {
             fromNode->data.balance -= last.amount;
         }
     }
-    else if (last.type == 2) { // Undo Withdraw
+    else if (last.type == 2) {
         if (fromNode != nullptr) {
             fromNode->data.balance += last.amount;
         }
     }
-    else if (last.type == 3) { // Undo Transfer
+    else if (last.type == 3) {
         if (fromNode != nullptr) {
             fromNode->data.balance += last.amount;
         }
@@ -118,7 +117,6 @@ void undoLastAction(List* ls)
         }
     }
 
-    // Remove the transaction node from the linked list `ls`
     Node* prev = nullptr;
     cur = ls->head;
     while (cur != nullptr) {
@@ -168,7 +166,7 @@ void stackMenu(List* ls)
     int choice;
     do
     {
-        cout << "\n--- Stack Menu (action history) ---\n";
+        cout << "\n==== Stack Menu (action history) ====\n";
         cout << "1. Undo last action\n";
         cout << "2. View history\n";
         cout << "0. Back\n";

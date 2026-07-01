@@ -114,7 +114,7 @@ void operationsMenu(List* myBank)
                     loggedInID = "";
                     cout << "Account deleted! You will be logged out.\n";
                     rebuildGlobalArray(myBank);
-                    choice = 11; // Force the loop to exit back to main menu
+                    choice = 11; 
                 } else {
                     cout << "Cancelled\n";
                 }
@@ -181,7 +181,7 @@ int main()
     do
     {
         clearConsole();
-        cout << "\n==== Welcome to BDSM (Banking Data System Management) ====\n";
+        cout << "\n==== Welcome to our Banking Data System Management ====\n";
         cout << "1. Login\n";
         cout << "2. Register / Add an account\n";
         cout << "3. Exit\n";
@@ -207,13 +207,12 @@ int main()
                     cout << "\nPress Enter to enter your account...";
                     cin.ignore(10000, '\n');
                     cin.get();
-                    
-                    // Proceed to Page 2
+
                     operationsMenu(myBank); 
                 } 
                 else 
                 {
-                    cout << "Login failed. Please check your ID and Password.\n";
+                    cout << "Login failed, please check your ID and Password again\n";
                     cout << "\nPress Enter to try again...";
                     cin.ignore(10000, '\n');
                     cin.get();
@@ -225,7 +224,7 @@ int main()
                 string name, password;
                 double balance;
 
-                cout << "===== Register New Account =====\n";
+                cout << "===== Register a new account =====\n";
                 string id = generateID(myBank);
 
                 cin.ignore();
@@ -255,7 +254,7 @@ int main()
             }
             default:
             {
-                cout << "Invalid option, try again\n";
+                cout << "Invalid option, please try again\n";
                 cout << "\nPress Enter to continue...";
                 cin.ignore(10000, '\n');
                 cin.get();

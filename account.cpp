@@ -80,17 +80,17 @@ bool addTrans(List* ls, string fromAcc, string toAcc, int type, double amount){
         return false;
     }
 
-    if (type == 1) { // Deposit
+    if (type == 1) { // deposit
         fromNode->data.balance += amount;
     }
-    else if (type == 2) { // Withdraw
+    else if (type == 2) { // withdraw
         if (fromNode->data.balance < amount) {
             cout << "Insufficient balance!" << endl;
             return false;
         }
         fromNode->data.balance -= amount;
     }
-    else if (type == 3) { // Transfer
+    else if (type == 3) { // transfer
         if (toNode == nullptr) {
             cout << "Destination account not found!" << endl;
             return false;
@@ -249,10 +249,12 @@ void saveToFile(List* ls, string filename){
                     savedName[i] = '_';
                 }
             }
-            file << "account " << tmp -> data.accID << " " << savedName << " " << tmp -> data.password << " " << tmp -> data.balance << "\n";
+            file << "account " << tmp -> data.accID << " " << savedName << " " << 
+            tmp -> data.password << " " << tmp -> data.balance << "\n";
         }
         else if (tmp -> type == 1){
-            file << "transaction " << tmp -> transData.transID << " " << tmp -> transData.fromAcc << " " << tmp -> transData.toAcc << " " << tmp -> transData.type << " " << tmp -> transData.amount << "\n";
+            file << "transaction " << tmp -> transData.transID << " " << tmp -> transData.fromAcc << " " <<
+            tmp -> transData.toAcc << " " << tmp -> transData.type << " " << tmp -> transData.amount << "\n";
         }
         tmp = tmp -> next;
     }
